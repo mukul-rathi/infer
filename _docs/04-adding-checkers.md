@@ -21,19 +21,20 @@ Make sure you are able to successfully build Infer and your developer environmen
 make devsetup
 ```
 
-Get familiar with Infer checkers and run Infer with some examples:
+Get familiar with Infer checkers and run Infer with some examples in the `examples/java_hello/` directory:
 
 ```
-infer run -- javac Hello.java
+infer run -- javac Hello.java Pointers.java Resources.java
 ```
 
 In addition, get familiar with the Control Flow Graph (CFG) that Infer generates for you:
 
 ```
-infer run -g -- javac Hello.java
+infer run -g -- javac Hello.java Pointers.java Resources.java
 dot -Tpdf infer-out/captured/Hello.java*/icfg.dot -o icfg.pdf
 open icfg.pdf
 ```
+
 This will give you further information about the analysis that is being done, including the CFG in dot format.
 It is important that you understand the generated CFG since this is the abstraction of code that Checkers will analyze.
 
@@ -41,7 +42,6 @@ Infer is built with [OCaml](https://ocaml.org).
 This is a programming language that combines both functional and imperative programming.
 If you are not familiar with OCaml, it might be hard at the beginning to understand the code.
 Take your time to review the [basics](https://ocaml.org/learn/tutorials/basics.html) and do some [exercises](https://ocaml.org/learn/tutorials/99problems.html).
-
 
 ## Let's go
 
@@ -97,6 +97,7 @@ This pattern matches every function call. In our code, it would look like:
           "A description of my simple checker"
     | _ -> astate
 ```
+
 The `absint/PatternMatch.ml` module contains the `java_proc_name_with_class_method` function which we can use for matching the required pattern.
 
 Each node is represented using the type `instr` from the Smallfoot Intermediate Language (SIL). Take a look at `IR/Sil.mli` to get familiar with all the types. All source code languages supported by Infer are converted to this representation.
@@ -145,7 +146,7 @@ Can you spot the difference? A new restriction was added to our pattern -- `is_p
 So our implementation is done.
 Now we have to register it as an enabled Checker in `checkers/registerCheckers.ml`.
 
-Assuming the code is in SimpleCheckers.ml, you would register your checker as a _java\_checker_ in `checkers/registerCheckers.ml` by adding it to the `all_checkers` list:
+Assuming the code is in SimpleCheckers.ml, you would register your checker as a _java_checker_ in `checkers/registerCheckers.ml` by adding it to the `all_checkers` list:
 
 ```ocaml
 let all_checkers =
@@ -179,4 +180,4 @@ class Hello {
 Notice that only `System.out.println` is being detected.
 
 All set! You are ready to create your own Checkers!
-Infer is an open source project and you are more than welcome to contribute. Take a look at the  [Github](https://github.com/facebook/infer/) page and feel free to fork or even open an issue if you're facing any trouble.
+Infer is an open source project and you are more than welcome to contribute. Take a look at the [Github](https://github.com/facebook/infer/) page and feel free to fork or even open an issue if you're facing any trouble.
